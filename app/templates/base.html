@@ -1,18 +1,45 @@
 <html>
     <head>
+      <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+      <style>
+      body {
+        background-color: Seagreen;
+        color: white;
+      }
+      h1, form {
+        text-align: center;
+      }
+      nav {
+        color: black;
+        background-color: white;
+        text-align: right;
+      }
+      a {
+        color: darkgreen;
+      }
+      /* p {
+        background-color: white;
+        color: black;
+      } */
+      </style>
+
       {% if title %}
       <title>{{ title }} - Foodify</title>
       {% else %}
       <title>Welcome to Foodify</title>
       {% endif %}
     </head>
+
     <body>
+      <nav>
+        <p style="font-size: 100px; text-align: center;">🐔</p>
         <div>Foodify: <a href="/index">Home</a></div>
         <div>Forms: <a href="/forms">Forms</a></div>
         <div>Farmer: <a href="/forms/farmer">Farmer Form</a></div>
         <div>Consumer: <a href="/forms/consumer">Consumer Form</a></div>
         <div>About: <a href="/about">About</a></div>
         <hr>
+      </nav>
         {% block content %}{% endblock %}
     </body>
 </html>
