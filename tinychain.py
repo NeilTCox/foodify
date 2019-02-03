@@ -10,8 +10,8 @@ from collections import defaultdict
 
 class Blockchain:
     def __init__(self, genesis_block_data):
-        self.chain = defaultdict()
-        self.genesis_block = Block(0, datetime.datetime.now(), genesis_block_data, hashlib.sha256("-1"))
+        self.chain = {}
+        self.genesis_block = Block(0, datetime.datetime.now(), genesis_block_data, hashlib.sha256("-1".encode('utf-8')).hexdigest())
         self.chain[self.genesis_block.hash] = self.genesis_block
         self.last_block = self.genesis_block
 
@@ -56,17 +56,17 @@ class Block:
         self.hash = self.hash_block()
 
     def hash_block(self):
-        return hashlib.sha256( \
+        return hashlib.sha256( (\
         str(self.index) + \
         str(self.timestamp) + \
         str(self.data) + \
-        str(self.previous_hash))
+        str(self.previous_hash)).encode('utf-8')).hexdigest()
     
     def __str__(self):
         return "================================" \
         + "\nIndex: " + str(self.index) \
         + "\nTimestamp: " + str(self.timestamp) \
         + "\nData: " + self.data \
-        + "\nPrevious Hash: " + str(self.previous_hash.hexdigest()) \
-        + "\nHash: " + str(self.hash.hexdigest()) \
+        + "\nPrevious Hash: " + str(self.previous_hash) \
+        + "\nHash: " + str(self.hash) \
         + "\n================================"

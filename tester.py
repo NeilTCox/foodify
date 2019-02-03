@@ -19,7 +19,7 @@ def main():
     for block in chain:
         print(block)
     
-    print(blockchain.explore_block(blockchain.last_block.hash))
+    print(blockchain.explore_block(blockchain.last_block.hash.hexdigest()))
 
 if __name__ == "__main__":
     main()
