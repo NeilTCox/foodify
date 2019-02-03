@@ -1,0 +1,18 @@
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - Foodify</title>
+      {% else %}
+      <title>Welcome to Foodify</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>Foodify: <a href="/index">Home</a></div>
+        <div>Forms: <a href="/forms">Forms</a></div>
+        <div>Farmer: <a href="/forms/farmer">Farmer Form</a></div>
+        <div>Consumer: <a href="/forms/consumer">Consumer Form</a></div>
+        <div>About: <a href="/about">About</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>
