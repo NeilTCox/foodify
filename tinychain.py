@@ -8,6 +8,44 @@ import hashlib
 import datetime
 from collections import defaultdict
 
+class Blockchain:
+    def __init__(self, genesis_block_data):
+        self.chain = defaultdict()
+        self.genesis_block = Block(0, datetime.datetime.now(), genesis_block_data, hashlib.sha256("-1"))
+        self.chain[self.genesis_block.hash] = self.genesis_block
+        self.last_block = self.genesis_block
+
+    def export_chain(self):
+        return (self.genesis_block.hash, self.last_block.hash, self.chain)
+
+    def import_chain(self, genesis_block_hash, last_block_hash, chain):
+        self.chain = chain
+        self.genesis_block = self.explore_block(genesis_block_hash)
+        self.last_block = self.explore_block(last_block_hash)
+
+    def add_block(self, data):
+        this_index = self.last_block.index + 1
+        this_timestamp = datetime.datetime.now()
+        this_data = data
+        last_hash = self.last_block.hash
+        new_block = Block(this_index, this_timestamp, this_data, last_hash)
+        self.chain[new_block.hash] = new_block
+        self.last_block = new_block
+        return new_block
+
+    def explore_chain(self):
+        block = self.last_block
+        if block.index == 0:
+            return [block]
+        chain = []
+        while block.index > 0:
+            chain.append(block)
+            block = self.chain[block.previous_hash]
+        chain.append(block)
+        return chain
+
+    def explore_block(self, hash):
+        return self.chain[hash]
 
 class Block:
     def __init__(self, index, timestamp, data, previous_hash):
@@ -32,45 +70,3 @@ class Block:
         + "\nPrevious Hash: " + str(self.previous_hash.hexdigest()) \
         + "\nHash: " + str(self.hash.hexdigest()) \
         + "\n================================"
-
-blockchain = defaultdict(Block)
-current_head = None
-
-def create_genesis_block():
-    genesis_block = Block(0, datetime.datetime.now(), "GENESIS BLOCK", hashlib.sha256("-1"))
-    blockchain[genesis_block.hash] = genesis_block
-    return genesis_block
-
-def add_block(last_block, data):
-    this_index = last_block.index + 1
-    this_timestamp = datetime.datetime.now()
-    this_data = data
-    last_hash = last_block.hash
-    new_block = Block(this_index, this_timestamp, this_data, last_hash)
-    blockchain[new_block.hash] = new_block
-    return new_block
-
-def explore(block):
-    if block.index == 0:
-        print(block)
-        return
-    else:
-        print(block)
-        explore(blockchain[block.previous_hash])
-
-def main():
-    print("Creating genesis block...")
-    current_head = create_genesis_block()
-    
-    print("\nExploring blockchain:")
-    explore(current_head)
-    
-    print("\nAdding blocks...")
-    for i in range(0, 5):
-        current_head = add_block(current_head, "I'M BLOCK #" + str(i))
-    
-    print("\nExploring blockchain:")
-    explore(current_head)
-
-if __name__ == "__main__":
-    main()
