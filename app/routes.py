@@ -8,33 +8,38 @@ blockchain = Blockchain("GENESIS BLOCK")
 
 @app.route('/save')
 def save():
-    with open('blockchain_chain.txt', 'w') as file:
+    with open('blockchain_chain.txt', 'wb') as file:
         file.write(pickle.dumps(blockchain.chain))
     file.close()
 
-    metadata = [blockchain.genesis_block.hash.hexdigest(), blockchain.last_block.hash.hexdigest()]
+    metadata = [blockchain.genesis_block.hash, blockchain.last_block.hash]
+    metadata[0] = metadata[0]+'\n'
     with open ('blockchain_meta.txt', 'w') as file:
         file.writelines(metadata)
     file.close()
+
+    return render_template('index.html', title='Home')
     
 
 @app.route('/load')
 def load():
-    with open('blockchain_chain.txt', 'r') as file:
+    with open('blockchain_chain.txt', 'rb') as file:
         blockchain.chain = pickle.load(file)
     file.close()
 
     with open('blockchain_meta.txt', 'r') as file:
         metadata = file.readlines()
-    blockchain.genesis_block = blockchain.chain[metadata[0]]
+    blockchain.genesis_block = blockchain.chain[metadata[0].strip()]
     blockchain.last_block = blockchain.chain[metadata[1]]
+
+    return render_template('index.html', title='Home')
 
 
 @app.route('/')
 @app.route('/index')
 def index():
     user = {'username': 'Nic'}
-    return render_template('index.html', title='Home', user=user)
+    return render_template('index.html', title='Home')
 
 @app.route('/forms/')
 def forms():
